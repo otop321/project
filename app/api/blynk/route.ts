@@ -15,19 +15,11 @@ export async function GET(request: Request) {
 
   try {
     const urls = [
-      `https://blynk.cloud/external/api/get?token=${token}&v0`,
       `https://blynk.cloud/external/api/get?token=${token}&v1`,
       `https://blynk.cloud/external/api/get?token=${token}&v2`,
       `https://blynk.cloud/external/api/get?token=${token}&v3`,
       `https://blynk.cloud/external/api/get?token=${token}&v4`,
-      `https://blynk.cloud/external/api/get?token=${token}&v5`,
-      `https://blynk.cloud/external/api/get?token=${token}&v7`,
-      `https://blynk.cloud/external/api/get?token=${token}&v10`,
-      `https://blynk.cloud/external/api/get?token=${token}&v11`,
-      `https://blynk.cloud/external/api/get?token=${token}&v12`,
-      `https://blynk.cloud/external/api/get?token=${token}&v13`,
-      `https://blynk.cloud/external/api/get?token=${token}&v14`,
-      `https://blynk.cloud/external/api/get?token=${token}&v15`
+      `https://blynk.cloud/external/api/get?token=${token}&v6`,
     ];
 
     const responses = await Promise.all(
@@ -35,19 +27,11 @@ export async function GET(request: Request) {
     );
 
     const data = {
-      v0: responses[0].data,
-      v1: responses[1].data,
-      v2: responses[2].data,
-      v3: responses[3].data,
-      v4: responses[4].data,
-      v5: responses[5].data,
-      v7: responses[6].data,
-      v10: responses[7].data,
-      v11: responses[8].data,
-      v12: responses[9].data,
-      v13: responses[10].data,
-      v14: responses[11].data,
-      v15: responses[12].data,
+      v1: String(responses[0].data ?? ""),   // Gas
+      v2: String(responses[1].data ?? ""),   // Light
+      v3: String(responses[2].data ?? ""),   // Temperature
+      v4: String(responses[3].data ?? ""),   // Humidity
+      v6: String(responses[4].data ?? ""),   // PM2.5
     };
 
     // Record history if session exists
@@ -56,11 +40,11 @@ export async function GET(request: Request) {
        await dbConnect();
        await SensorHistory.create({
          userId: session.user.id,
-         temp: Number(data.v0) || 0,
-         humidity: Number(data.v1) || 0,
-         pm25: Number(data.v3) || 0,
-         light: Number(data.v4) || 0,
-         gas: Number(data.v5) || 0,
+         temp: Number(data.v3) || 0,      // v3 = Temperature
+         humidity: Number(data.v4) || 0,  // v4 = Humidity
+         pm25: Number(data.v6) || 0,      // v6 = PM2.5
+         light: Number(data.v2) || 0,     // v2 = Light
+         gas: Number(data.v1) || 0,       // v1 = Gas
        });
     }
 

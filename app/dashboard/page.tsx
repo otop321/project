@@ -123,25 +123,17 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Temperature</p>
                   <h3 className="text-4xl font-light text-white mt-2 tracking-tight group-hover:scale-105 transition-transform origin-left">
-                    {blynkData?.v0 || "--"}<span className="text-xl text-gray-500 ml-1">°C</span>
+                    {blynkData?.v3 || "--"}<span className="text-xl text-gray-500 ml-1">°C</span>
                   </h3>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <div className="p-3 bg-linear-to-br from-red-500/20 to-orange-500/5 rounded-xl border border-red-500/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all">
-                    <Thermometer className="w-6 h-6 text-red-400" />
-                  </div>
-                  <button
-                    onClick={() => updatePin("v10", blynkData?.v10 === "1" ? 0 : 1)}
-                    className={`relative h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none ${blynkData?.v10 === "1" ? "bg-red-600" : "bg-gray-700"}`}
-                  >
-                    <span className={`absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${blynkData?.v10 === "1" ? "translate-x-5" : ""}`} />
-                  </button>
+                <div className="p-3 bg-linear-to-br from-red-500/20 to-orange-500/5 rounded-xl border border-red-500/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all">
+                  <Thermometer className="w-6 h-6 text-red-400" />
                 </div>
               </div>
               <div className="w-full bg-gray-900 rounded-full h-1.5 mt-6 overflow-hidden">
                 <div
                   className="bg-linear-to-r from-orange-500 to-red-500 h-1.5 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-1000 ease-out"
-                  style={{ width: `${Math.min(Number(blynkData?.v0 || 0) * 2, 100)}%` }}
+                  style={{ width: `${Math.min(Number(blynkData?.v3 || 0) * 2, 100)}%` }}
                 ></div>
               </div>
             </div>
@@ -152,25 +144,17 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Humidity</p>
                   <h3 className="text-4xl font-light text-white mt-2 tracking-tight group-hover:scale-105 transition-transform origin-left">
-                    {blynkData?.v1 || "--"}<span className="text-xl text-gray-500 ml-1">%</span>
+                    {blynkData?.v4 || "--"}<span className="text-xl text-gray-500 ml-1">%</span>
                   </h3>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <div className="p-3 bg-linear-to-br from-blue-500/20 to-cyan-500/5 rounded-xl border border-blue-500/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all">
-                    <Droplets className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <button
-                    onClick={() => updatePin("v11", blynkData?.v11 === "1" ? 0 : 1)}
-                    className={`relative h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none ${blynkData?.v11 === "1" ? "bg-blue-600" : "bg-gray-700"}`}
-                  >
-                    <span className={`absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${blynkData?.v11 === "1" ? "translate-x-5" : ""}`} />
-                  </button>
+                <div className="p-3 bg-linear-to-br from-blue-500/20 to-cyan-500/5 rounded-xl border border-blue-500/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all">
+                  <Droplets className="w-6 h-6 text-blue-400" />
                 </div>
               </div>
               <div className="w-full bg-gray-900 rounded-full h-1.5 mt-6 overflow-hidden">
                 <div
                   className="bg-linear-to-r from-cyan-500 to-blue-500 h-1.5 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-1000 ease-out"
-                  style={{ width: `${Number(blynkData?.v1 || 0)}%` }}
+                  style={{ width: `${Number(blynkData?.v4 || 0)}%` }}
                 ></div>
               </div>
             </div>
@@ -212,25 +196,17 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">PM 2.5 Dust</p>
                   <h3 className="text-4xl font-light text-white mt-2 tracking-tight group-hover:scale-105 transition-transform origin-left">
-                    {blynkData?.v3 || "--"}<span className="text-xl text-gray-500 ml-1">µg/m³</span>
+                    {blynkData?.v6 || "--"}<span className="text-xl text-gray-500 ml-1">µg/m³</span>
                   </h3>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <div className="p-3 bg-linear-to-br from-blue-500/20 to-indigo-500/5 rounded-xl border border-blue-500/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all">
-                    <Wind className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <button
-                    onClick={() => updatePin("v13", blynkData?.v13 === "1" ? 0 : 1)}
-                    className={`relative h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none ${blynkData?.v13 === "1" ? "bg-blue-600" : "bg-gray-700"}`}
-                  >
-                    <span className={`absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${blynkData?.v13 === "1" ? "translate-x-5" : ""}`} />
-                  </button>
+                <div className="p-3 bg-linear-to-br from-blue-500/20 to-indigo-500/5 rounded-xl border border-blue-500/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all">
+                  <Wind className="w-6 h-6 text-blue-400" />
                 </div>
               </div>
               <div className="w-full bg-gray-900 rounded-full h-1.5 mt-6 overflow-hidden">
                 <div
                   className="bg-linear-to-r from-blue-400 to-indigo-500 h-1.5 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-1000 ease-out"
-                  style={{ width: `${Math.min(Number(blynkData?.v3 || 0), 100)}%` }}
+                  style={{ width: `${Math.min(Number(blynkData?.v6 || 0), 100)}%` }}
                 ></div>
               </div>
             </div>
@@ -241,25 +217,17 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Light</p>
                   <h3 className="text-4xl font-light text-white mt-2 tracking-tight group-hover:scale-105 transition-transform origin-left">
-                    {blynkData?.v4 || "--"}<span className="text-xl text-gray-500 ml-1">Lux</span>
+                    {blynkData?.v2 || "--"}<span className="text-xl text-gray-500 ml-1">%</span>
                   </h3>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <div className="p-3 bg-linear-to-br from-yellow-500/20 to-amber-500/5 rounded-xl border border-yellow-500/20 group-hover:scale-110 group-hover:rotate-45 group-hover:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all">
-                    <Sun className="w-6 h-6 text-yellow-400" />
-                  </div>
-                  <button
-                    onClick={() => updatePin("v14", blynkData?.v14 === "1" ? 0 : 1)}
-                    className={`relative h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none ${blynkData?.v14 === "1" ? "bg-yellow-500" : "bg-gray-700"}`}
-                  >
-                    <span className={`absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${blynkData?.v14 === "1" ? "translate-x-5" : ""}`} />
-                  </button>
+                <div className="p-3 bg-linear-to-br from-yellow-500/20 to-amber-500/5 rounded-xl border border-yellow-500/20 group-hover:scale-110 group-hover:rotate-45 group-hover:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all">
+                  <Sun className="w-6 h-6 text-yellow-400" />
                 </div>
               </div>
               <div className="w-full bg-gray-900 rounded-full h-1.5 mt-6 overflow-hidden">
                 <div
                   className="bg-linear-to-r from-yellow-400 to-amber-500 h-1.5 rounded-full shadow-[0_0_10px_rgba(234,179,8,0.5)] transition-all duration-1000 ease-out"
-                  style={{ width: `${Math.min(Number(blynkData?.v4 || 0) / 10, 100)}%` }}
+                  style={{ width: `${Math.min(Number(blynkData?.v2 || 0), 100)}%` }}
                 ></div>
               </div>
             </div>
@@ -270,25 +238,17 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Gas Concentration</p>
                   <h3 className="text-4xl font-light text-white mt-2 tracking-tight group-hover:scale-105 transition-transform origin-left">
-                    {blynkData?.v5 || "--"}<span className="text-xl text-gray-500 ml-1">ppm</span>
+                    {blynkData?.v1 || "--"}<span className="text-xl text-gray-500 ml-1">ppm</span>
                   </h3>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <div className="p-3 bg-linear-to-br from-orange-500/20 to-red-500/5 rounded-xl border border-orange-500/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(249,115,22,0.3)] transition-all">
-                    <Flame className="w-6 h-6 text-orange-500" />
-                  </div>
-                  <button
-                    onClick={() => updatePin("v15", blynkData?.v15 === "1" ? 0 : 1)}
-                    className={`relative h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none ${blynkData?.v15 === "1" ? "bg-orange-600" : "bg-gray-700"}`}
-                  >
-                    <span className={`absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${blynkData?.v15 === "1" ? "translate-x-5" : ""}`} />
-                  </button>
+                <div className="p-3 bg-linear-to-br from-orange-500/20 to-red-500/5 rounded-xl border border-orange-500/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(249,115,22,0.3)] transition-all">
+                  <Flame className="w-6 h-6 text-orange-500" />
                 </div>
               </div>
               <div className="w-full bg-gray-900 rounded-full h-1.5 mt-6 overflow-hidden">
                 <div
                   className="bg-linear-to-r from-orange-400 to-red-500 h-1.5 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.5)] transition-all duration-1000 ease-out"
-                  style={{ width: `${Math.min(Number(blynkData?.v5 || 0) / 10, 100)}%` }}
+                  style={{ width: `${Math.min(Number(blynkData?.v1 || 0) / 10, 100)}%` }}
                 ></div>
               </div>
             </div>
