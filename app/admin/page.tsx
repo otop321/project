@@ -263,18 +263,18 @@ export default function AdminDashboardPage() {
         <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 bg-linear-to-r from-gray-800 to-gray-900 rounded-2xl p-6 border border-white/5 shadow-2xl flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className={`p-3 rounded-xl ${blynkData?.v2 === "1" ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
-                <Activity className={`w-8 h-8 ${blynkData?.v2 === "1" ? "animate-pulse" : ""}`} />
+              <div className={`p-3 rounded-xl ${blynkData?.v3 ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
+                <Activity className={`w-8 h-8 ${blynkData?.v3 ? "animate-pulse" : ""}`} />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white flex items-center">
                   ESP32 Controller 
-                  <span className={`ml-3 px-2 py-0.5 text-[10px] rounded-full uppercase tracking-tighter ${blynkData?.v2 === "1" ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20"}`}>
-                    {blynkData?.v2 === "1" ? "Connected" : "Disconnected"}
+                  <span className={`ml-3 px-2 py-0.5 text-[10px] rounded-full uppercase tracking-tighter ${blynkData?.v3 ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20"}`}>
+                    {blynkData?.v3 ? "Connected" : "Disconnected"}
                   </span>
                 </h2>
                 <div className="mt-1 flex items-center text-sm text-gray-400">
-                  <span className="flex items-center mr-4"><Info className="w-3 h-3 mr-1" /> Uptime: {blynkData?.v2 === "1" ? "99.9%" : "0%"}</span>
+                  <span className="flex items-center mr-4"><Info className="w-3 h-3 mr-1" /> Uptime: {blynkData?.v3 ? "99.9%" : "0%"}</span>
                   <span className="flex items-center"><Settings className="w-3 h-3 mr-1" /> Ver: 1.0.4 Octa</span>
                 </div>
               </div>
@@ -292,9 +292,9 @@ export default function AdminDashboardPage() {
                 <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Active Alerts</p>
                 <div className="text-3xl font-black text-orange-400">
                   {[
-                    Number(blynkData?.v3) > settings.pm25_limit,
-                    Number(blynkData?.v0) > settings.temp_limit,
-                    Number(blynkData?.v5) > settings.gas_limit,
+                    Number(blynkData?.v6) > settings.pm25_limit,
+                    Number(blynkData?.v3) > settings.temp_limit,
+                    Number(blynkData?.v1) > settings.gas_limit,
                   ].filter(Boolean).length}
                 </div>
              </div>
@@ -311,27 +311,21 @@ export default function AdminDashboardPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* PM2.5 */}
-            <div className={`bg-gray-800/40 rounded-xl p-4 border transition-all group ${Number(blynkData?.v3) > settings.pm25_limit ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'border-white/5 hover:border-blue-400/30'}`}>
+            <div className={`bg-gray-800/40 rounded-xl p-4 border transition-all group ${Number(blynkData?.v6) > settings.pm25_limit ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'border-white/5 hover:border-blue-400/30'}`}>
               <div className="flex justify-between items-start">
                 <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">PM 2.5</p>
-                {Number(blynkData?.v3) > settings.pm25_limit ? <AlertTriangle className="w-4 h-4 text-red-500 animate-bounce" /> : <Wind className="w-4 h-4 text-blue-400 group-hover:animate-bounce" />}
+                {Number(blynkData?.v6) > settings.pm25_limit ? <AlertTriangle className="w-4 h-4 text-red-500 animate-bounce" /> : <Wind className="w-4 h-4 text-blue-400 group-hover:animate-bounce" />}
               </div>
               <div className="mt-2 flex justify-between items-end">
                 <div>
-                  <span className={`text-2xl font-bold ${Number(blynkData?.v3) > settings.pm25_limit ? 'text-red-400' : 'text-white'}`}>{blynkData?.v3 || "0"}</span>
+                  <span className={`text-2xl font-bold ${Number(blynkData?.v6) > settings.pm25_limit ? 'text-red-400' : 'text-white'}`}>{blynkData?.v6 || "0"}</span>
                   <span className="text-xs text-gray-500 ml-1">µg/m³</span>
                 </div>
-                <button
-                  onClick={() => updatePin("v13", blynkData?.v13 === "1" ? 0 : 1)}
-                  className={`h-6 w-10 rounded-full transition-colors relative ${blynkData?.v13 === "1" ? "bg-blue-600" : "bg-gray-700"}`}
-                >
-                  <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${blynkData?.v13 === "1" ? "translate-x-4" : ""}`} />
-                </button>
               </div>
               <div className="w-full bg-gray-900 h-1 rounded-full mt-3 overflow-hidden">
                 <div 
-                  className={`${Number(blynkData?.v3) > settings.pm25_limit ? 'bg-red-500' : 'bg-blue-500'} h-full rounded-full transition-all duration-1000`}
-                  style={{ width: `${Math.min(Number(blynkData?.v3 || 0), 100)}%` }}
+                  className={`${Number(blynkData?.v6) > settings.pm25_limit ? 'bg-red-500' : 'bg-blue-500'} h-full rounded-full transition-all duration-1000`}
+                  style={{ width: `${Math.min(Number(blynkData?.v6 || 0), 100)}%` }}
                 ></div>
               </div>
             </div>
@@ -344,46 +338,34 @@ export default function AdminDashboardPage() {
               </div>
               <div className="mt-2 flex justify-between items-end">
                 <div>
-                  <span className="text-2xl font-bold">{blynkData?.v4 || "0"}</span>
-                  <span className="text-xs text-gray-500 ml-1">Lux</span>
+                  <span className="text-2xl font-bold">{blynkData?.v2 || "0"}</span>
+                  <span className="text-xs text-gray-500 ml-1">%</span>
                 </div>
-                <button
-                  onClick={() => updatePin("v14", blynkData?.v14 === "1" ? 0 : 1)}
-                  className={`h-6 w-10 rounded-full transition-colors relative ${blynkData?.v14 === "1" ? "bg-yellow-600" : "bg-gray-700"}`}
-                >
-                  <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${blynkData?.v14 === "1" ? "translate-x-4" : ""}`} />
-                </button>
               </div>
               <div className="w-full bg-gray-900 h-1 rounded-full mt-3 overflow-hidden">
                 <div 
                   className="bg-yellow-500 h-full rounded-full transition-all duration-1000"
-                  style={{ width: `${Math.min(Number(blynkData?.v4 || 0) / 10, 100)}%` }}
+                  style={{ width: `${Math.min(Number(blynkData?.v2 || 0), 100)}%` }}
                 ></div>
               </div>
             </div>
 
             {/* Temperature */}
-            <div className={`bg-gray-800/40 rounded-xl p-4 border transition-all group ${Number(blynkData?.v0) > settings.temp_limit ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'border-white/5 hover:border-red-400/30'}`}>
+            <div className={`bg-gray-800/40 rounded-xl p-4 border transition-all group ${Number(blynkData?.v3) > settings.temp_limit ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'border-white/5 hover:border-red-400/30'}`}>
               <div className="flex justify-between items-start">
                 <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Temp</p>
-                {Number(blynkData?.v0) > settings.temp_limit ? <Bell className="w-4 h-4 text-red-500 animate-pulse" /> : <Thermometer className="w-4 h-4 text-red-500" />}
+                {Number(blynkData?.v3) > settings.temp_limit ? <Bell className="w-4 h-4 text-red-500 animate-pulse" /> : <Thermometer className="w-4 h-4 text-red-500" />}
               </div>
               <div className="mt-2 flex justify-between items-end">
                 <div>
-                  <span className={`text-2xl font-bold ${Number(blynkData?.v0) > settings.temp_limit ? 'text-red-400' : 'text-white'}`}>{blynkData?.v0 || "0"}</span>
+                  <span className={`text-2xl font-bold ${Number(blynkData?.v3) > settings.temp_limit ? 'text-red-400' : 'text-white'}`}>{blynkData?.v3 || "0"}</span>
                   <span className="text-xs text-gray-500 ml-1">°C</span>
                 </div>
-                <button
-                  onClick={() => updatePin("v10", blynkData?.v10 === "1" ? 0 : 1)}
-                  className={`h-6 w-10 rounded-full transition-colors relative ${blynkData?.v10 === "1" ? "bg-red-600" : "bg-gray-700"}`}
-                >
-                  <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${blynkData?.v10 === "1" ? "translate-x-4" : ""}`} />
-                </button>
               </div>
               <div className="w-full bg-gray-900 h-1 rounded-full mt-3 overflow-hidden">
                 <div 
-                  className={`${Number(blynkData?.v0) > settings.temp_limit ? 'bg-red-500' : 'bg-red-500'} h-full rounded-full transition-all duration-1000`}
-                  style={{ width: `${Math.min(Number(blynkData?.v0 || 0) * 2, 100)}%` }}
+                  className="bg-red-500 h-full rounded-full transition-all duration-1000"
+                  style={{ width: `${Math.min(Number(blynkData?.v3 || 0) * 2, 100)}%` }}
                 ></div>
               </div>
             </div>
@@ -408,8 +390,8 @@ export default function AdminDashboardPage() {
               </div>
               <div className="w-full bg-gray-900 h-1 rounded-full mt-3 overflow-hidden">
                 <div 
-                  className={`${Number(blynkData?.v5) > settings.gas_limit ? 'bg-red-500' : 'bg-orange-500'} h-full rounded-full transition-all duration-1000`}
-                  style={{ width: `${Math.min(Number(blynkData?.v5 || 0) / 10, 100)}%` }}
+                  className={`${Number(blynkData?.v1) > settings.gas_limit ? 'bg-red-500' : 'bg-orange-500'} h-full rounded-full transition-all duration-1000`}
+                  style={{ width: `${Math.min(Number(blynkData?.v1 || 0) / 10, 100)}%` }}
                 ></div>
               </div>
             </div>
@@ -423,15 +405,9 @@ export default function AdminDashboardPage() {
               </div>
               <div className="mt-2 flex justify-between items-end">
                 <div>
-                  <span className="text-2xl font-bold">{blynkData?.v1 || "0"}</span>
+                  <span className="text-2xl font-bold">{blynkData?.v4 || "0"}</span>
                   <span className="text-xs text-gray-500 ml-1">%</span>
                 </div>
-                <button
-                  onClick={() => updatePin("v11", blynkData?.v11 === "1" ? 0 : 1)}
-                  className={`h-6 w-10 rounded-full transition-colors relative ${blynkData?.v11 === "1" ? "bg-cyan-600" : "bg-gray-700"}`}
-                >
-                  <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${blynkData?.v11 === "1" ? "translate-x-4" : ""}`} />
-                </button>
               </div>
             </div>
 
@@ -439,12 +415,12 @@ export default function AdminDashboardPage() {
             <div className="bg-gray-800/40 rounded-xl p-4 border border-white/5 backdrop-blur-sm hover:border-emerald-400/30 transition-all group">
               <div className="flex justify-between items-start">
                 <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Power</p>
-                <Zap className={`w-4 h-4 ${blynkData?.v2 === "1" ? "text-emerald-400" : "text-gray-600"}`} />
+                <Zap className={`w-4 h-4 ${blynkData?.v3 ? "text-emerald-400" : "text-gray-600"}`} />
               </div>
               <div className="mt-2 flex justify-between items-end">
                 <div>
-                  <span className={`text-xl font-bold ${blynkData?.v2 === "1" ? "text-emerald-400" : "text-gray-500"}`}>
-                    {blynkData?.v2 === "1" ? "ONLINE" : "OFFLINE"}
+                  <span className={`text-xl font-bold ${blynkData?.v3 ? "text-emerald-400" : "text-gray-500"}`}>
+                    {blynkData?.v3 ? "ONLINE" : "OFFLINE"}
                   </span>
                 </div>
                 <button
