@@ -3,7 +3,7 @@ import axios from "axios";
 import dbConnect from "../../../lib/dbConnect";
 import SensorHistory from "../../../models/SensorHistory";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "../../../lib/auth";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
