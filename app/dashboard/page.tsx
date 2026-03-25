@@ -4,14 +4,23 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { LogOut, Activity, Thermometer, Droplets, Zap, Shield, Sun, Wind, Flame } from "lucide-react";
+import { LogOut, Activity, Thermometer, Droplets, Zap, Shield, Sun, Wind, Flame, BarChart3 } from "lucide-react";
 import Link from "next/link";
+import SensorChart from "@/components/SensorChart";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [blynkData, setBlynkData] = useState<Record<string, string | null> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [historyData, setHistoryData] = useState<{
+    timestamp: string;
+    temp: number;
+    humidity: number;
+    pm25: number;
+    light: number;
+    gas: number;
+  }[]>([]);
 
   const updatePin = async (pin: string, value: number) => {
     if (!session?.user?.blynkToken) return;
@@ -51,6 +60,22 @@ export default function DashboardPage() {
       return () => clearInterval(interval);
     }
   }, [session]);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await axios.get("/api/sensors/history");
+        setHistoryData(res.data);
+      } catch (error) {
+        console.error("Failed to fetch history:", error);
+      }
+    };
+    if (status === "authenticated") {
+      fetchHistory();
+      const interval = setInterval(fetchHistory, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [status]);
 
   if (status === "loading" || loading) {
     return (
@@ -253,6 +278,36 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Historical Charts Section */}
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-white flex items-center">
+              <div className="w-2 h-6 bg-indigo-500 rounded-full mr-3"></div>
+              <BarChart3 className="w-5 h-5 mr-2 text-indigo-400" />
+              Sensor History
+            </h2>
+            <div className="flex items-center text-sm text-gray-400 bg-gray-800/50 px-3 py-1.5 rounded-full border border-gray-700">
+              <div className="w-2 h-2 rounded-full bg-indigo-400 mr-2"></div>
+              Auto updates every 30s
+            </div>
+          </div>
+
+          {historyData.length === 0 ? (
+            <div className="bg-gray-800/40 rounded-2xl p-12 border border-white/5 text-center">
+              <BarChart3 className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+              <p className="text-gray-400">No history data yet. Data is recorded every 5 minutes.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <SensorChart data={historyData} dataKey="temp" title="Temperature" color="#f87171" />
+              <SensorChart data={historyData} dataKey="humidity" title="Humidity" color="#60a5fa" />
+              <SensorChart data={historyData} dataKey="pm25" title="PM 2.5" color="#a78bfa" />
+              <SensorChart data={historyData} dataKey="light" title="Light" color="#fbbf24" />
+              <SensorChart data={historyData} dataKey="gas" title="Gas" color="#fb923c" />
+            </div>
+          )}
         </div>
 
       </main>
