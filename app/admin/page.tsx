@@ -417,18 +417,10 @@ export default function AdminDashboardPage() {
                 <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Power</p>
                 <Zap className={`w-4 h-4 ${blynkData?.v3 ? "text-emerald-400" : "text-gray-600"}`} />
               </div>
-              <div className="mt-2 flex justify-between items-end">
-                <div>
-                  <span className={`text-xl font-bold ${blynkData?.v3 ? "text-emerald-400" : "text-gray-500"}`}>
-                    {blynkData?.v3 ? "ONLINE" : "OFFLINE"}
-                  </span>
-                </div>
-                <button
-                  onClick={() => updatePin("v12", blynkData?.v12 === "1" ? 0 : 1)}
-                  className={`h-6 w-10 rounded-full transition-colors relative ${blynkData?.v12 === "1" ? "bg-emerald-600" : "bg-gray-700"}`}
-                >
-                  <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${blynkData?.v12 === "1" ? "translate-x-4" : ""}`} />
-                </button>
+              <div className="mt-2 text-center">
+                <span className={`text-xl font-bold ${blynkData?.v3 ? "text-emerald-400" : "text-gray-500"}`}>
+                  {blynkData?.v3 ? "ONLINE" : "OFFLINE"}
+                </span>
               </div>
             </div>
 
