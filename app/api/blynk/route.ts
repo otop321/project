@@ -57,7 +57,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { token, pin, value } = await request.json();
+    const body = await request.json().catch(() => null);
+    if (!body) {
+      return new NextResponse("Invalid JSON body", { status: 400 });
+    }
+    const { token, pin, value } = body;
 
     if (!token || !pin) {
       return new NextResponse("Token and pin are required", { status: 400 });
@@ -65,7 +69,15 @@ export async function POST(request: Request) {
 
     // Blynk API: update?token={token}&{pin}={value}
     const url = `https://blynk.cloud/external/api/update?token=${token}&${pin}=${value}`;
-    await axios.get(url);
+    // Use catch to avoid 500 when Blynk returns non-200 (e.g. invalid pin)
+    const blynkRes = await axios.get(url).catch((err) => {
+      console.warn(`Blynk pin update warning (${pin}):`, err?.response?.data || err?.message);
+      return null;
+    });
+
+    if (!blynkRes) {
+      return NextResponse.json({ success: false, warning: "Blynk API did not accept the update" });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
