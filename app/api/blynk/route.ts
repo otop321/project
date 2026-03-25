@@ -20,6 +20,7 @@ export async function GET(request: Request) {
       `https://blynk.cloud/external/api/get?token=${token}&v3`,
       `https://blynk.cloud/external/api/get?token=${token}&v4`,
       `https://blynk.cloud/external/api/get?token=${token}&v6`,
+      `https://blynk.cloud/external/api/get?token=${token}&v7`,
     ];
 
     const responses = await Promise.all(
@@ -32,6 +33,7 @@ export async function GET(request: Request) {
       v3: String(responses[2].data ?? ""),   // Temperature
       v4: String(responses[3].data ?? ""),   // Humidity
       v6: String(responses[4].data ?? ""),   // PM2.5
+      v7: String(responses[5].data ?? ""),   // System Power
     };
 
     // Record history if session exists

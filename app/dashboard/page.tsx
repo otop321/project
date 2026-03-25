@@ -13,6 +13,8 @@ export default function DashboardPage() {
   const router = useRouter();
   const [blynkData, setBlynkData] = useState<Record<string, string | null> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [relayOn, setRelayOn] = useState(false);
+  const [initialized, setInitialized] = useState(false);
   const [historyData, setHistoryData] = useState<{
     timestamp: string;
     temp: number;
@@ -25,9 +27,10 @@ export default function DashboardPage() {
   const updatePin = async (pin: string, value: number) => {
     if (!session?.user?.blynkToken) return;
     try {
+      if (pin === "v7") setRelayOn(value === 1); // optimistic UI update
       await axios.post("/api/blynk", { token: session.user.blynkToken, pin, value });
-      setBlynkData(prev => prev ? { ...prev, [pin]: String(value) } : prev);
     } catch (error) {
+      if (pin === "v7") setRelayOn(value !== 1); // revert on error
       console.error("Failed to update pin:", error);
     }
   };
@@ -44,6 +47,12 @@ export default function DashboardPage() {
         try {
           const res = await axios.get(`/api/blynk?token=${session.user.blynkToken}`);
           setBlynkData(res.data);
+          // Sync relay state only on first load to prevent polling from 
+          // overwriting user interaction (optimistic UI)
+          if (res.data?.v7 !== undefined && !initialized) {
+            setRelayOn(res.data.v7 === "1");
+            setInitialized(true);
+          }
         } catch (error) {
           console.error("Error fetching Blynk data:", error);
           setBlynkData({ v0: "24.5", v1: "60", v2: "1" });
@@ -59,7 +68,7 @@ export default function DashboardPage() {
       const interval = setInterval(fetchBlynkData, 5000);
       return () => clearInterval(interval);
     }
-  }, [session]);
+  }, [session, initialized]);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -190,20 +199,20 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">System Power</p>
                   <div className="mt-2 flex items-center">
-                    <h3 className={`text-4xl font-light tracking-tight group-hover:scale-105 transition-transform origin-left ${blynkData?.v7 === "1" ? 'text-white' : 'text-gray-500'}`}>
-                      {blynkData?.v7 === "1" ? "Active" : "Standby"}
+                    <h3 className={`text-4xl font-light tracking-tight group-hover:scale-105 transition-transform origin-left ${relayOn ? 'text-white' : 'text-gray-500'}`}>
+                      {relayOn ? "Active" : "Standby"}
                     </h3>
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  <div className={`p-3 rounded-xl border transition-all duration-500 group-hover:scale-110 ${blynkData?.v7 === "1" ? 'bg-linear-to-br from-green-500/20 to-emerald-500/5 border-green-500/20 group-hover:shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-gray-800 border-gray-700'}`}>
-                    <Zap className={`w-6 h-6 ${blynkData?.v7 === "1" ? 'text-green-400' : 'text-gray-600'}`} />
+                  <div className={`p-3 rounded-xl border transition-all duration-500 group-hover:scale-110 ${relayOn ? 'bg-linear-to-br from-green-500/20 to-emerald-500/5 border-green-500/20 group-hover:shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-gray-800 border-gray-700'}`}>
+                    <Zap className={`w-6 h-6 ${relayOn ? 'text-green-400' : 'text-gray-600'}`} />
                   </div>
                   <button
-                    onClick={() => updatePin("v7", blynkData?.v7 === "1" ? 0 : 1)}
-                    className={`relative h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none ${blynkData?.v7 === "1" ? "bg-green-600" : "bg-gray-700"}`}
+                    onClick={() => updatePin("v7", relayOn ? 0 : 1)}
+                    className={`relative h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none ${relayOn ? "bg-green-600" : "bg-gray-700"}`}
                   >
-                    <span className={`absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${blynkData?.v7 === "1" ? "translate-x-5" : ""}`} />
+                    <span className={`absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 ${relayOn ? "translate-x-5" : ""}`} />
                   </button>
                 </div>
               </div>
