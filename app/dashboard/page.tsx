@@ -272,7 +272,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Gas Concentration</p>
                   <h3 className="text-4xl font-light text-white mt-2 tracking-tight group-hover:scale-105 transition-transform origin-left">
-                    {blynkData?.v1 || "--"}<span className="text-xl text-gray-500 ml-1">ppm</span>
+                    {(blynkData?.v1 || blynkData?.v5) || "--"}<span className="text-xl text-gray-500 ml-1">ppm</span>
                   </h3>
                 </div>
                 <div className="p-3 bg-linear-to-br from-orange-500/20 to-red-500/5 rounded-xl border border-orange-500/20 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(249,115,22,0.3)] transition-all">
@@ -282,7 +282,7 @@ export default function DashboardPage() {
               <div className="w-full bg-gray-900 rounded-full h-1.5 mt-6 overflow-hidden">
                 <div
                   className="bg-linear-to-r from-orange-400 to-red-500 h-1.5 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.5)] transition-all duration-1000 ease-out"
-                  style={{ width: `${Math.min(Number(blynkData?.v1 || 0) / 10, 100)}%` }}
+                  style={{ width: `${Math.min(Number(blynkData?.v1 || blynkData?.v5 || 0) / 10, 100)}%` }}
                 ></div>
               </div>
             </div>

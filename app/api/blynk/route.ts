@@ -15,12 +15,13 @@ export async function GET(request: Request) {
 
   try {
     const urls = [
-      `https://blynk.cloud/external/api/get?token=${token}&v1`,
-      `https://blynk.cloud/external/api/get?token=${token}&v2`,
-      `https://blynk.cloud/external/api/get?token=${token}&v3`,
-      `https://blynk.cloud/external/api/get?token=${token}&v4`,
-      `https://blynk.cloud/external/api/get?token=${token}&v6`,
-      `https://blynk.cloud/external/api/get?token=${token}&v7`,
+      `https://blynk.cloud/external/api/get?token=${token}&pin=v1`,
+      `https://blynk.cloud/external/api/get?token=${token}&pin=v2`,
+      `https://blynk.cloud/external/api/get?token=${token}&pin=v3`,
+      `https://blynk.cloud/external/api/get?token=${token}&pin=v4`,
+      `https://blynk.cloud/external/api/get?token=${token}&pin=v5`,
+      `https://blynk.cloud/external/api/get?token=${token}&pin=v6`,
+      `https://blynk.cloud/external/api/get?token=${token}&pin=v7`,
     ];
 
     const responses = await Promise.all(
@@ -28,13 +29,17 @@ export async function GET(request: Request) {
     );
 
     const data = {
-      v1: String(responses[0].data ?? ""),   // Gas
-      v2: String(responses[1].data ?? ""),   // Light
-      v3: String(responses[2].data ?? ""),   // Temperature
-      v4: String(responses[3].data ?? ""),   // Humidity
-      v6: String(responses[4].data ?? ""),   // PM2.5
-      v7: String(responses[5].data ?? ""),   // System Power
+      v1: String(responses[0]?.data ?? ""),   // Gas?
+      v2: String(responses[1]?.data ?? ""),   // Light
+      v3: String(responses[2]?.data ?? ""),   // Temperature
+      v4: String(responses[3]?.data ?? ""),   // Humidity
+      v5: String(responses[4]?.data ?? ""),   // Gas?
+      v6: String(responses[5]?.data ?? ""),   // PM2.5
+      v7: String(responses[6]?.data ?? ""),   // System Power
     };
+
+    // Logging for debugging (will show in Vercel logs)
+    console.log("Blynk GET Data:", data);
 
     // Record history if session exists
     const session = await getServerSession(authOptions);
@@ -46,7 +51,7 @@ export async function GET(request: Request) {
          humidity: Number(data.v4) || 0,  // v4 = Humidity
          pm25: Number(data.v6) || 0,      // v6 = PM2.5
          light: Number(data.v2) || 0,     // v2 = Light
-         gas: Number(data.v1) || 0,       // v1 = Gas
+         gas: Number(data.v1 || data.v5) || 0, // v1 or v5 = Gas
        });
     }
 

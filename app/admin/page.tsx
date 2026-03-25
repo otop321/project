@@ -378,7 +378,7 @@ export default function AdminDashboardPage() {
               </div>
               <div className="mt-2 flex justify-between items-end">
                 <div>
-                  <span className={`text-2xl font-bold ${Number(blynkData?.v5) > settings.gas_limit ? 'text-red-400' : 'text-white'}`}>{blynkData?.v5 || "0"}</span>
+                  <span className={`text-2xl font-bold ${Number(blynkData?.v1 || blynkData?.v5 || 0) > settings.gas_limit ? 'text-red-400' : 'text-white'}`}>{(blynkData?.v1 || blynkData?.v5) || "0"}</span>
                   <span className="text-xs text-gray-500 ml-1">ppm</span>
                 </div>
                 <button
@@ -390,8 +390,8 @@ export default function AdminDashboardPage() {
               </div>
               <div className="w-full bg-gray-900 h-1 rounded-full mt-3 overflow-hidden">
                 <div 
-                  className={`${Number(blynkData?.v1) > settings.gas_limit ? 'bg-red-500' : 'bg-orange-500'} h-full rounded-full transition-all duration-1000`}
-                  style={{ width: `${Math.min(Number(blynkData?.v1 || 0) / 10, 100)}%` }}
+                  className={`${Number(blynkData?.v1 || blynkData?.v5 || 0) > settings.gas_limit ? 'bg-red-500' : 'bg-orange-500'} h-full rounded-full transition-all duration-1000`}
+                  style={{ width: `${Math.min(Number(blynkData?.v1 || blynkData?.v5 || 0) / 10, 100)}%` }}
                 ></div>
               </div>
             </div>
