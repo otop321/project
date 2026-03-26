@@ -22,11 +22,14 @@ export async function GET(request: Request) {
       `https://blynk.cloud/external/api/get?token=${token}&pin=v5`,
       `https://blynk.cloud/external/api/get?token=${token}&pin=v6`,
       `https://blynk.cloud/external/api/get?token=${token}&pin=v7`,
+      `https://blynk.cloud/external/api/isHardwareConnected?token=${token}`
     ];
 
     const responses = await Promise.all(
       urls.map(url => axios.get(url).catch(() => ({ data: null })))
     );
+
+    const isConnected = responses[7]?.data === true || String(responses[7]?.data) === "true";
 
     const data = {
       v1: String(responses[0]?.data ?? ""),   // Gas?
@@ -36,14 +39,15 @@ export async function GET(request: Request) {
       v5: String(responses[4]?.data ?? ""),   // Gas?
       v6: String(responses[5]?.data ?? ""),   // PM2.5
       v7: String(responses[6]?.data ?? ""),   // System Power
+      isConnected, // Include for frontend usage
     };
 
     // Logging for debugging (will show in Vercel logs)
-    console.log("Blynk GET Data:", data);
+    console.log("Blynk GET Data:", data, "Connected:", isConnected);
 
-    // Record history if session exists
+    // Record history if session exists and hardware is online
     const session = await getServerSession(authOptions);
-    if (session?.user?.id) {
+    if (session?.user?.id && isConnected) {
        await dbConnect();
        
        const lastRecord = await SensorHistory.findOne({ userId: session.user.id })
