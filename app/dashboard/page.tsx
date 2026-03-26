@@ -306,7 +306,7 @@ export default function DashboardPage() {
           {historyData.length === 0 ? (
             <div className="bg-gray-800/40 rounded-2xl p-12 border border-white/5 text-center">
               <BarChart3 className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-400">No history data yet. Data is recorded every 5 minutes.</p>
+              <p className="text-gray-400">No history data yet. Data is recorded every 1 minute.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

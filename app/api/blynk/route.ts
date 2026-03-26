@@ -45,14 +45,24 @@ export async function GET(request: Request) {
     const session = await getServerSession(authOptions);
     if (session?.user?.id) {
        await dbConnect();
-       await SensorHistory.create({
-         userId: session.user.id,
-         temp: Number(data.v3) || 0,      // v3 = Temperature
-         humidity: Number(data.v4) || 0,  // v4 = Humidity
-         pm25: Number(data.v6) || 0,      // v6 = PM2.5
-         light: Number(data.v2) || 0,     // v2 = Light
-         gas: Number(data.v1 || data.v5) || 0, // v1 or v5 = Gas
-       });
+       
+       const lastRecord = await SensorHistory.findOne({ userId: session.user.id })
+         .sort({ timestamp: -1 });
+
+       const oneMinute = 60 * 1000;
+       const now = Date.now();
+       const lastTime = lastRecord?.timestamp ? new Date(lastRecord.timestamp).getTime() : 0;
+
+       if (now - lastTime >= oneMinute) {
+         await SensorHistory.create({
+           userId: session.user.id,
+           temp: Number(data.v3) || 0,      // v3 = Temperature
+           humidity: Number(data.v4) || 0,  // v4 = Humidity
+           pm25: Number(data.v6) || 0,      // v6 = PM2.5
+           light: Number(data.v2) || 0,     // v2 = Light
+           gas: Number(data.v1 || data.v5) || 0, // v1 or v5 = Gas
+         });
+       }
     }
 
     return NextResponse.json(data);
